@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="CSV_FILE_POLL-inboundSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log category="INFO" logMessageID="false" logFullPayload="false">
+        <message>------------------------------
+            FILE EVENT TRIGGER
+            ------------------------------
+</message>
+    </log>
+    <datamapper config="resources:datamapper/CSVtoXML/CSVtoXML.dmc" inputSchema="resources:datamapper/CSVtoXML/CSVtoXML_inputSchema.json" inputType="CSV" outputSchema="resources:datamapper/CSVtoXML/CSVtoXML_outputSchema.json" outputType="XML"/>
+</sequence>

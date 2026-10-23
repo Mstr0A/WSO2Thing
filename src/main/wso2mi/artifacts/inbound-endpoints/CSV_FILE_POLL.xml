@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inboundEndpoint name="CSV_FILE_POLL" class="org.wso2.carbon.inbound.vfs.VFSConsumer" sequence="CSV_FILE_POLL-inboundSequence" onError="CSV_FILE_POLL-inboundErrorSequence" suspend="false" xmlns="http://ws.apache.org/ns/synapse">
+    <parameters>
+        <parameter name="transport.vfs.FileURI">/home/ameen0/WSO2_Project/CSVs/</parameter>
+        <parameter name="scheduleType">Polling</parameter>
+        <parameter name="interval">5000</parameter>
+        <parameter name="fileThrottlingType">Count</parameter>
+        <parameter name="transport.vfs.FileProcessCount">1</parameter>
+        <parameter name="sequential">true</parameter>
+        <parameter name="coordination">true</parameter>
+        <parameter name="transport.vfs.ActionAfterProcess">MOVE</parameter>
+        <parameter name="transport.vfs.MoveAfterProcess">/home/ameen0/WSO2_Project/Done/</parameter>
+        <parameter name="transport.vfs.ActionAfterFailure">MOVE</parameter>
+        <parameter name="transport.vfs.MoveAfterFailure">/home/ameen0/WSO2_Project/Failed/</parameter>
+        <parameter name="transport.vfs.FailedRecordsFileName">vfs-move-failed-records.properties</parameter>
+        <parameter name="transport.vfs.MoveFailedRecordTimestampFormat">dd-MM-yyyy HH:mm:ss</parameter>
+        <parameter name="transport.vfs.FailedRecordNextRetryDuration">3000</parameter>
+        <parameter name="transport.vfs.Locking">enable</parameter>
+        <parameter name="transport.vfs.AutoLockRelease">false</parameter>
+        <parameter name="transport.vfs.SFTPUserDirIsRoot">false</parameter>
+        <parameter name="transport.vfs.FileSortAscending">true</parameter>
+        <parameter name="transport.vfs.CheckSizeIgnoreEmpty">false</parameter>
+        <parameter name="transport.vfs.FileSizeLimit">-1</parameter>
+        <parameter name="transport.vfs.Streaming">false</parameter>
+        <parameter name="transport.vfs.Build">false</parameter>
+        <parameter name="transport.vfs.UpdateLastModified">true</parameter>
+    </parameters>
+</inboundEndpoint>
