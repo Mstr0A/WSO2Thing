@@ -1,18 +1,56 @@
 import * as dmUtils from "./dm-utils";
 declare var DM_PROPERTIES: any;
 
-/**
-* inputType:unknown
+/*
+* title : "root",
+* inputType : "CSV",
 */
-interface InputRoot {
+interface Root {
+    id: string
+    first_name: string
+    last_name: string
+    email: string
+    department: string
+    salary: string
+    hire_date: string
+    active: string
 }
 
-/**
-* outputType:unknown
+/*
+* title : "employees",
+* outputType : "XML",
 */
-interface OutputRoot {
+interface Employees {
+    employee: {
+        id: string
+        first_name: string
+        last_name: string
+        department: string
+        salary: string
+    }[]
 }
 
-export function mapFunction(input: InputRoot): OutputRoot {
-return {}
+
+
+/**
+ * functionName : map_S_root_S_employees
+ * inputVariable : inputroot
+*/
+export function mapFunction(input: Root[]): Employees {
+    return mapRootArrayToEmployees(input)
+}
+
+function mapRootArrayToEmployees(input: Root[]): Employees {
+    return {
+        employee: input
+            .filter(row => row.id !== "id")
+            .map(row => ({
+                id: row.id,
+                first_name: row.first_name,
+                last_name: row.last_name,
+                department: row.department,
+                salary: row.salary
+            }))
+    }
 };
+

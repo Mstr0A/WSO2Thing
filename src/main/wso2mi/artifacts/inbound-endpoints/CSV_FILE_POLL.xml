@@ -4,6 +4,7 @@
         <parameter name="transport.vfs.FileURI">${configs.WATCH_DIR}</parameter>
         <parameter name="scheduleType">Polling</parameter>
         <parameter name="interval">5000</parameter>
+        <parameter name="transport.vfs.ContentType">text/plain</parameter>
         <parameter name="fileThrottlingType">Count</parameter>
         <parameter name="transport.vfs.FileProcessCount">1</parameter>
         <parameter name="sequential">true</parameter>
