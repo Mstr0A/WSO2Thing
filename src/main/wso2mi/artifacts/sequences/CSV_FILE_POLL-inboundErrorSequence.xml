@@ -1,4 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sequence name="CSV_FILE_POLL-inboundErrorSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
-
+    <log category="ERROR" logMessageID="false" logFullPayload="false">
+        <message>------------------------------ ERROR DETECTED: PROCESSING ERROR SEQUENCE ------------------------------</message>
+    </log>
+    <!-- 1. Fetch input CSV file name from transport -->
+    <property name="incomingFileName" expression="get-property('transport', 'FILE_NAME')" scope="default" type="STRING"/>
+    <!-- 2. Construct output XML file name (or error XML file name) -->
+    <property name="outputFileName" expression="fn:concat(fn:substring-before($ctx:incomingFileName, '.csv'), '_failed.xml')" scope="default" type="STRING"/>
+    <!-- 3. Read environment paths -->
+    <property name="errorDir" expression="get-property('env', 'ERROR_DIR')" scope="default" type="STRING"/>
+    <property name="watchDir" expression="get-property('env', 'WATCH_DIR')" scope="default" type="STRING"/>
+    <!-- 4. Construct target paths -->
+    <property name="targetXmlFilePath" expression="fn:concat($ctx:errorDir, '/', $ctx:outputFileName)" scope="default" type="STRING"/>
+    <property name="sourceCsvFilePath" expression="fn:concat($ctx:watchDir, '/', $ctx:incomingFileName)" scope="default" type="STRING"/>
+    <!-- 5. Write error payload/XML to ERROR_DIR -->
+    <file.write configKey="LocalRoot">
+        <filePath>{$ctx:targetXmlFilePath}</filePath>
+        <contentOrExpression>${payload}</contentOrExpression>
+        <encoding>UTF-8</encoding>
+        <mimeType>application/xml</mimeType>
+        <compress>false</compress>
+        <writeMode>Overwrite</writeMode>
+        <enableStreaming>false</enableStreaming>
+        <appendNewLine>false</appendNewLine>
+        <enableLock>false</enableLock>
+        <updateLastModified>true</updateLastModified>
+        <maxRetries>0</maxRetries>
+        <retryDelay>0</retryDelay>
+        <timeBetweenSizeCheck></timeBetweenSizeCheck>
+        <updateFilePermission></updateFilePermission>
+        <diskShareAccessMask>MAXIMUM_ALLOWED</diskShareAccessMask>
+        <responseVariable>file_write_error</responseVariable>
+        <overwriteBody>false</overwriteBody>
+    </file.write>
+    <!-- 6. Move original CSV file to ERROR_DIR folder directly -->
+    <file.move configKey="LocalRoot">
+        <sourcePath>{$ctx:sourceCsvFilePath}</sourcePath>
+        <targetPath>{$ctx:errorDir}</targetPath>
+        <createParentDirectories>true</createParentDirectories>
+        <includeParent>false</includeParent>
+        <overwrite>true</overwrite>
+        <renameTo></renameTo>
+        <filePattern></filePattern>
+        <fileFilterType>ant</fileFilterType>
+        <includeFiles></includeFiles>
+        <excludeFiles></excludeFiles>
+        <maxFileAge></maxFileAge>
+        <timeBetweenSizeCheck></timeBetweenSizeCheck>
+        <isSourceMounted></isSourceMounted>
+        <isTargetMounted></isTargetMounted>
+        <diskShareAccessMask>MAXIMUM_ALLOWED</diskShareAccessMask>
+        <responseVariable>file_move_error</responseVariable>
+        <overwriteBody>false</overwriteBody>
+    </file.move>
+    <property name="SET_ROLLBACK_ONLY" value="true" scope="axis2"/>
+    <drop/>
 </sequence>

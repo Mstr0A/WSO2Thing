@@ -21,7 +21,15 @@
       <file>CSVtoXML_outputSchema.json</file>
       <path>/_system/governance/mi-resources/datamapper/CSVtoXML</path>
       <mediaType>text/plain</mediaType>
-      <properties/>
+      <properties></properties>
+    </item>
+  </artifact>
+  <artifact name="resources_xsd_employee_xsd" groupId="com.microintegrator.projects" version="1.0.0" type="registry/resource" serverRole="EnterpriseIntegrator">
+    <item>
+      <file>employee.xsd</file>
+      <path>/_system/governance/mi-resources/xsd</path>
+      <mediaType>application/x-xsd+xml</mediaType>
+      <properties></properties>
     </item>
   </artifact>
 </artifacts>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="LocalRoot" xmlns="http://ws.apache.org/ns/synapse">
+  <file.init>
+    <connectionType>LOCAL</connectionType>
+    <workingDir>/</workingDir>
+    <fileLockScheme>Local</fileLockScheme>
+    <fileCacheEnabled>true</fileCacheEnabled>
+    <suspendOnConnectionFailure>true</suspendOnConnectionFailure>
+    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+    <suspendInitialDuration>1000</suspendInitialDuration>
+    <suspendProgressionFactor>1.0</suspendProgressionFactor>
+    <suspendMaximumDuration>300000</suspendMaximumDuration>
+    <name>LocalRoot</name>
+  </file.init>
+</localEntry>

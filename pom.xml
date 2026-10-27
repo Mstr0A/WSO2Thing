@@ -409,6 +409,18 @@
   </properties>
   <dependencies>
     <dependency>
+      <groupId>org.wso2.integration.connector</groupId>
+      <artifactId>mi-connector-file</artifactId>
+      <version>6.0.8</version>
+      <type>zip</type>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.wso2.integration.inbound</groupId>
       <artifactId>mi-inbound-file</artifactId>
       <version>0.9.3</version>

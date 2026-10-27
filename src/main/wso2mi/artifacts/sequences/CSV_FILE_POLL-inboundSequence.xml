@@ -7,22 +7,71 @@
             ------------------------------
         </message>
     </log>
-    <dblookup>
-        <connection>
-            <pool>
-                <dsName>jdbc/PgDS</dsName>
-            </pool>
-        </connection>
-        <statement>
-            <sql><![CDATA[SELECT 1 AS ok]]></sql>
-            <result name="db_ok" column="ok"/>
-        </statement>
-    </dblookup>
-    <log category="INFO" logMessageID="false" logFullPayload="false">
-        <message>DB CHECK PASSED, SELECT 1 returned: ${props.synapse.db_ok}</message>
-    </log>
     <datamapper config="resources:datamapper/CSVtoXML/CSVtoXML.dmc" inputSchema="resources:datamapper/CSVtoXML/CSVtoXML_inputSchema.json" inputType="CSV" outputSchema="resources:datamapper/CSVtoXML/CSVtoXML_outputSchema.json" outputType="XML"/>
-    <log category="INFO" logMessageID="false" logFullPayload="true">
-        <message></message>
+    <validate source="${payload}" cache-schema="true">
+        <schema key="resources:xsd/employee.xsd"/>
+        <on-fail>
+            <log category="ERROR">
+                <message>XSD validation failed: ${props.synapse.ERROR_MESSAGE}</message>
+            </log>
+            <throwError type="VALIDATION_ERROR" errorMessage="XML failed XSD validation"/>
+        </on-fail>
+    </validate>
+    <!-- 1. Fetch input CSV file name from transport -->
+    <property name="incomingFileName" expression="get-property('transport', 'FILE_NAME')" scope="default" type="STRING"/>
+    <!-- 2. Construct output XML file name -->
+    <property name="outputFileName" expression="fn:concat(fn:substring-before($ctx:incomingFileName, '.csv'), '.xml')" scope="default" type="STRING"/>
+    <!-- 3. Read environment paths -->
+    <property name="doneDir" expression="get-property('env', 'DONE_DIR')" scope="default" type="STRING"/>
+    <property name="watchDir" expression="get-property('env', 'WATCH_DIR')" scope="default" type="STRING"/>
+    <!-- 4. Construct target path for XML output and source CSV absolute path -->
+    <property name="targetXmlFilePath" expression="fn:concat($ctx:doneDir, '/', $ctx:outputFileName)" scope="default" type="STRING"/>
+    <property name="sourceCsvFilePath" expression="fn:concat($ctx:watchDir, '/', $ctx:incomingFileName)" scope="default" type="STRING"/>
+    <!-- 5. Write converted XML to DONE_DIR -->
+    <file.write configKey="LocalRoot">
+        <filePath>{$ctx:targetXmlFilePath}</filePath>
+        <contentOrExpression>${payload}</contentOrExpression>
+        <encoding>UTF-8</encoding>
+        <mimeType>application/xml</mimeType>
+        <compress>false</compress>
+        <writeMode>Overwrite</writeMode>
+        <enableStreaming>false</enableStreaming>
+        <appendNewLine>false</appendNewLine>
+        <enableLock>false</enableLock>
+        <updateLastModified>true</updateLastModified>
+        <maxRetries>0</maxRetries>
+        <retryDelay>0</retryDelay>
+        <timeBetweenSizeCheck></timeBetweenSizeCheck>
+        <updateFilePermission></updateFilePermission>
+        <diskShareAccessMask>MAXIMUM_ALLOWED</diskShareAccessMask>
+        <responseVariable>file_write_1</responseVariable>
+        <overwriteBody>false</overwriteBody>
+    </file.write>
+    <!-- 6. Move original CSV file to DONE_DIR directory -->
+    <file.move configKey="LocalRoot">
+        <sourcePath>{$ctx:sourceCsvFilePath}</sourcePath>
+        <targetPath>{$ctx:doneDir}</targetPath>
+        <createParentDirectories>true</createParentDirectories>
+        <includeParent>false</includeParent>
+        <overwrite>true</overwrite>
+        <renameTo></renameTo>
+        <filePattern></filePattern>
+        <fileFilterType>ant</fileFilterType>
+        <includeFiles></includeFiles>
+        <excludeFiles></excludeFiles>
+        <maxFileAge></maxFileAge>
+        <timeBetweenSizeCheck></timeBetweenSizeCheck>
+        <isSourceMounted></isSourceMounted>
+        <isTargetMounted></isTargetMounted>
+        <diskShareAccessMask>MAXIMUM_ALLOWED</diskShareAccessMask>
+        <responseVariable>file_move_1</responseVariable>
+        <overwriteBody>false</overwriteBody>
+    </file.move>
+    <log category="INFO" logMessageID="false" logFullPayload="false">
+        <message>
+            ------------------------------
+            SUCCESS: XML written and CSV moved to DONE_DIR
+            ------------------------------
+        </message>
     </log>
 </sequence>
