@@ -2,7 +2,7 @@
 <localEntry key="LocalRoot" xmlns="http://ws.apache.org/ns/synapse">
   <file.init>
     <connectionType>LOCAL</connectionType>
-    <workingDir>/</workingDir>
+    <workingDir></workingDir>
     <fileLockScheme>Local</fileLockScheme>
     <fileCacheEnabled>true</fileCacheEnabled>
     <suspendOnConnectionFailure>true</suspendOnConnectionFailure>

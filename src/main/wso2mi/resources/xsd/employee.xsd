@@ -9,6 +9,13 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="EmailType">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="254"/>
+      <xs:pattern value="[^@\s]+@[^@\s]+\.[^@\s]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="SalaryType">
     <xs:restriction base="xs:decimal">
       <xs:minInclusive value="0"/>
@@ -26,8 +33,11 @@
               <xs:element name="id" type="xs:positiveInteger"/>
               <xs:element name="first_name" type="NameType"/>
               <xs:element name="last_name" type="NameType"/>
+              <xs:element name="email" type="EmailType"/>
               <xs:element name="department" type="NameType"/>
               <xs:element name="salary" type="SalaryType"/>
+              <xs:element name="hire_date" type="xs:date"/>
+              <xs:element name="active" type="xs:boolean"/>
             </xs:sequence>
           </xs:complexType>
         </xs:element>

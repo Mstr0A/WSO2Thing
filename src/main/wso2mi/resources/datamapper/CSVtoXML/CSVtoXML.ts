@@ -25,8 +25,11 @@ interface Employees {
         id: string
         first_name: string
         last_name: string
+        email: string
         department: string
         salary: string
+        hire_date: string
+        active: string
     }[]
 }
 
@@ -48,9 +51,11 @@ function mapRootArrayToEmployees(input: Root[]): Employees {
                 id: row.id,
                 first_name: row.first_name,
                 last_name: row.last_name,
+                email: row.email,
                 department: row.department,
-                salary: row.salary
+                salary: row.salary,
+                hire_date: row.hire_date,
+                active: row.active.trim().toLowerCase()
             }))
     }
 };
-
