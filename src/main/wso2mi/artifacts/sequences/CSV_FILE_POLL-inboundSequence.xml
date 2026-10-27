@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sequence name="CSV_FILE_POLL-inboundSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
-    <log category="INFO" logMessageID="false" logFullPayload="false">
+    <log category="INFO" logMessageID="false" logFullPayload="true">
         <message>------------------------------
             FILE EVENT TRIGGER
             ------------------------------
 </message>
+    </log>
+    <dblookup>
+        <connection>
+            <pool>
+                <dsName>jdbc/PgDS</dsName>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[SELECT 1 AS ok]]></sql>
+            <result name="db_ok" column="ok"/>
+        </statement>
+    </dblookup>
+    <log category="INFO" logMessageID="false" logFullPayload="false">
+        <message>DB CHECK PASSED, SELECT 1 returned: ${props.synapse.db_ok}</message>
     </log>
     <datamapper config="resources:datamapper/CSVtoXML/CSVtoXML.dmc" inputSchema="resources:datamapper/CSVtoXML/CSVtoXML_inputSchema.json" inputType="CSV" outputSchema="resources:datamapper/CSVtoXML/CSVtoXML_outputSchema.json" outputType="XML"/>
 </sequence>
