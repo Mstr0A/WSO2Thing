@@ -13,6 +13,9 @@
     <!-- 4. Construct target paths -->
     <property name="targetXmlFilePath" expression="fn:concat($ctx:errorDir, '/', $ctx:outputFileName)" scope="default" type="STRING"/>
     <property name="sourceCsvFilePath" expression="fn:concat($ctx:watchDir, '/', $ctx:incomingFileName)" scope="default" type="STRING"/>
+    <log category="ERROR">
+        <message>csvData=${vars.csvData} | errorDetail=${vars.errorDetail} | file=${props.synapse.sourceCsvFilePath}</message>
+    </log>
     <!-- 5. Write error payload/XML to ERROR_DIR -->
     <file.write configKey="LocalRoot">
         <filePath>{$ctx:targetXmlFilePath}</filePath>
@@ -53,6 +56,21 @@
         <responseVariable>file_move_error</responseVariable>
         <overwriteBody>false</overwriteBody>
     </file.move>
+    <dbreport>
+        <connection>
+            <pool>
+                <dsName>jdbc/PgDS</dsName>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[INSERT INTO file_transactions (file_path, success, error_reason, csv_data, result_xml) VALUES (?, FALSE, COALESCE(NULLIF(?::text, ''), ?::text), ?, ?)]]></sql>
+            <parameter expression="${props.synapse.sourceCsvFilePath}" type="VARCHAR"/>
+            <parameter expression="${vars.errorDetail}" type="VARCHAR"/>
+            <parameter expression="${props.synapse.ERROR_MESSAGE}" type="VARCHAR"/>
+            <parameter expression="${vars.csvData}" type="VARCHAR"/>
+            <parameter expression="${payload}" type="VARCHAR"/>
+        </statement>
+    </dbreport>
     <property name="SET_ROLLBACK_ONLY" value="true" scope="axis2"/>
     <drop/>
 </sequence>

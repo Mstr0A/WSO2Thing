@@ -7,12 +7,14 @@
             ------------------------------
         </message>
     </log>
+    <variable name="csvData" expression="${payload.text}" type="STRING"/>
     <datamapper config="resources:datamapper/CSVtoXML/CSVtoXML.dmc" inputSchema="resources:datamapper/CSVtoXML/CSVtoXML_inputSchema.json" inputType="CSV" outputSchema="resources:datamapper/CSVtoXML/CSVtoXML_outputSchema.json" outputType="XML"/>
     <validate source="${payload}" cache-schema="true">
         <schema key="resources:xsd/employee.xsd"/>
         <on-fail>
+            <variable name="errorDetail" expression="${props.synapse.ERROR_MESSAGE}" type="STRING"/>
             <log category="ERROR">
-                <message>XSD validation failed: ${props.synapse.ERROR_MESSAGE}</message>
+                <message>XSD validation failed: ${vars.errorDetail}</message>
             </log>
             <throwError type="VALIDATION_ERROR" errorMessage="XML failed XSD validation"/>
         </on-fail>
@@ -67,6 +69,19 @@
         <responseVariable>file_move_1</responseVariable>
         <overwriteBody>false</overwriteBody>
     </file.move>
+    <dbreport>
+        <connection>
+            <pool>
+                <dsName>jdbc/PgDS</dsName>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[INSERT INTO file_transactions (file_path, success, error_reason, csv_data, result_xml) VALUES (?, TRUE, NULL, ?, ?)]]></sql>
+            <parameter expression="${props.synapse.sourceCsvFilePath}" type="VARCHAR"/>
+            <parameter expression="${vars.csvData}" type="VARCHAR"/>
+            <parameter expression="${payload}" type="VARCHAR"/>
+        </statement>
+    </dbreport>
     <log category="INFO" logMessageID="false" logFullPayload="false">
         <message>
             ------------------------------
