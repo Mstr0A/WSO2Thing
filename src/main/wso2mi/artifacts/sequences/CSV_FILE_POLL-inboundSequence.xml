@@ -24,6 +24,7 @@
     <!-- 2. Construct output XML file name -->
     <property name="outputFileName" expression="fn:concat(fn:substring-before($ctx:incomingFileName, '.csv'), '.xml')" scope="default" type="STRING"/>
     <!-- 3. Read environment paths -->
+    <property name="backUp" expression="get-property('env', 'BACKUP_DIR')" scope="default" type="STRING"/>
     <property name="doneDir" expression="get-property('env', 'DONE_DIR')" scope="default" type="STRING"/>
     <property name="watchDir" expression="get-property('env', 'WATCH_DIR')" scope="default" type="STRING"/>
     <!-- 4. Construct target path for XML output and source CSV absolute path -->
@@ -49,10 +50,10 @@
         <responseVariable>file_write_1</responseVariable>
         <overwriteBody>false</overwriteBody>
     </file.write>
-    <!-- 6. Move original CSV file to DONE_DIR directory -->
+    <!-- 6. Move original CSV file to BACKUP_DIR directory -->
     <file.move configKey="LocalRoot">
         <sourcePath>{$ctx:sourceCsvFilePath}</sourcePath>
-        <targetPath>{$ctx:doneDir}</targetPath>
+        <targetPath>{$ctx:backUp}</targetPath>
         <createParentDirectories>true</createParentDirectories>
         <includeParent>false</includeParent>
         <overwrite>true</overwrite>
