@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sequence name="CSV_FILE_POLL-inboundErrorSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
-    <log category="ERROR" logMessageID="false" logFullPayload="false">
-        <message>------------------------------ ERROR DETECTED: PROCESSING ERROR SEQUENCE ------------------------------</message>
+    <log category="DEBUG" logMessageID="false" logFullPayload="false">
+        <message>
+            ------------------------------
+            ERROR DETECTED: PROCESSING ERROR SEQUENCE
+            ------------------------------
+        </message>
     </log>
     <!-- 1. Fetch input CSV file name from transport -->
     <property name="incomingFileName" expression="get-property('transport', 'FILE_NAME')" scope="default" type="STRING"/>
@@ -13,7 +17,7 @@
     <!-- 4. Construct target paths -->
     <property name="targetXmlFilePath" expression="fn:concat($ctx:errorDir, '/', $ctx:outputFileName)" scope="default" type="STRING"/>
     <property name="sourceCsvFilePath" expression="fn:concat($ctx:watchDir, '/', $ctx:incomingFileName)" scope="default" type="STRING"/>
-    <log category="ERROR">
+    <log category="DEBUG">
         <message>csvData=${vars.csvData} | errorDetail=${vars.errorDetail} | file=${props.synapse.sourceCsvFilePath}</message>
     </log>
     <!-- 5. Move original CSV file to ERROR_DIR folder directly -->
@@ -51,6 +55,13 @@
             <parameter expression="${payload}" type="VARCHAR"/>
         </statement>
     </dbreport>
+    <log category="DEBUG" logMessageID="false" logFullPayload="false">
+        <message>
+            ------------------------------
+            ERROR SEQUENCE COMPLETE DROPPING
+            ------------------------------
+        </message>
+    </log>
     <property name="SET_ROLLBACK_ONLY" value="true" scope="axis2"/>
     <drop/>
 </sequence>

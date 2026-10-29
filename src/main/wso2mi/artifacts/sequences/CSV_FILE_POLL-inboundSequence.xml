@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sequence name="CSV_FILE_POLL-inboundSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
-    <log category="INFO" logMessageID="false" logFullPayload="false">
+    <log category="DEBUG" logMessageID="false" logFullPayload="false">
         <message>
             ------------------------------
             FILE EVENT TRIGGER
@@ -83,10 +83,10 @@
             <parameter expression="${payload}" type="VARCHAR"/>
         </statement>
     </dbreport>
-    <log category="INFO" logMessageID="false" logFullPayload="false">
+    <log category="DEBUG" logMessageID="false" logFullPayload="false">
         <message>
             ------------------------------
-            SUCCESS: XML written and CSV moved to DONE_DIR
+            SUCCESS: XML written and CSV moved to BACKUP_DIR
             ------------------------------
         </message>
     </log>
