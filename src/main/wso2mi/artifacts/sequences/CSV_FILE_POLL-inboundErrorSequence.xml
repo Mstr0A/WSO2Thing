@@ -7,16 +7,18 @@
             ------------------------------
         </message>
     </log>
-    <!-- 1. Fetch input CSV file name from transport -->
-    <property name="incomingFileName" expression="get-property('transport', 'FILE_NAME')" scope="default" type="STRING"/>
-    <!-- 2. Construct output XML file name (or error XML file name) -->
-    <property name="outputFileName" expression="fn:concat(fn:substring-before($ctx:incomingFileName, '.csv'), '_failed.xml')" scope="default" type="STRING"/>
-    <!-- 3. Read environment paths -->
-    <property name="errorDir" expression="get-property('env', 'ERROR_DIR')" scope="default" type="STRING"/>
-    <property name="watchDir" expression="get-property('env', 'WATCH_DIR')" scope="default" type="STRING"/>
-    <!-- 4. Construct target paths -->
-    <property name="targetXmlFilePath" expression="fn:concat($ctx:errorDir, '/', $ctx:outputFileName)" scope="default" type="STRING"/>
-    <property name="sourceCsvFilePath" expression="fn:concat($ctx:watchDir, '/', $ctx:incomingFileName)" scope="default" type="STRING"/>
+    <propertyGroup>
+        <!-- 1. Fetch input CSV file name from transport -->
+        <property name="incomingFileName" expression="get-property('transport', 'FILE_NAME')" scope="default" type="STRING"/>
+        <!-- 2. Construct output XML file name (or error XML file name) -->
+        <property name="outputFileName" expression="fn:concat(fn:substring-before($ctx:incomingFileName, '.csv'), '_failed.xml')" scope="default" type="STRING"/>
+        <!-- 3. Read environment paths -->
+        <property name="errorDir" expression="get-property('env', 'ERROR_DIR')" scope="default" type="STRING"/>
+        <property name="watchDir" expression="get-property('env', 'WATCH_DIR')" scope="default" type="STRING"/>
+        <!-- 4. Construct target paths -->
+        <property name="targetXmlFilePath" expression="fn:concat($ctx:errorDir, '/', $ctx:outputFileName)" scope="default" type="STRING"/>
+        <property name="sourceCsvFilePath" expression="fn:concat($ctx:watchDir, '/', $ctx:incomingFileName)" scope="default" type="STRING"/>
+    </propertyGroup>
     <log category="DEBUG">
         <message>csvData=${vars.csvData} | errorDetail=${vars.errorDetail} | file=${props.synapse.sourceCsvFilePath}</message>
     </log>

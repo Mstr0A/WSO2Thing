@@ -19,18 +19,20 @@
             <throwError type="VALIDATION_ERROR" errorMessage="XML failed XSD validation"/>
         </on-fail>
     </validate>
-    <!-- 1. Fetch input CSV file name from transport -->
-    <property name="incomingFileName" expression="get-property('transport', 'FILE_NAME')" scope="default" type="STRING"/>
-    <!-- 2. Construct output XML file name -->
-    <property name="outputFileName" expression="fn:concat(fn:substring-before($ctx:incomingFileName, '.csv'), '.xml')" scope="default" type="STRING"/>
-    <!-- 3. Read environment paths -->
-    <property name="backUp" expression="get-property('env', 'BACKUP_DIR')" scope="default" type="STRING"/>
-    <property name="doneDir" expression="get-property('env', 'DONE_DIR')" scope="default" type="STRING"/>
-    <property name="watchDir" expression="get-property('env', 'WATCH_DIR')" scope="default" type="STRING"/>
-    <!-- 4. Construct target path for XML output and source CSV absolute path -->
-    <property name="targetXmlFilePath" expression="fn:concat($ctx:doneDir, '/', $ctx:outputFileName)" scope="default" type="STRING"/>
-    <property name="sourceCsvFilePath" expression="fn:concat($ctx:watchDir, '/', $ctx:incomingFileName)" scope="default" type="STRING"/>
-    <!-- 5. Write converted XML to DONE_DIR -->
+    <propertyGroup>
+        <!-- 1. Fetch input CSV file name from transport -->
+        <property name="incomingFileName" expression="get-property('transport', 'FILE_NAME')" scope="default" type="STRING"/>
+        <!-- 2. Construct output XML file name -->
+        <property name="outputFileName" expression="fn:concat(fn:substring-before($ctx:incomingFileName, '.csv'), '.xml')" scope="default" type="STRING"/>
+        <!-- 3. Read environment paths -->
+        <property name="backUp" expression="get-property('env', 'BACKUP_DIR')" scope="default" type="STRING"/>
+        <property name="doneDir" expression="get-property('env', 'DONE_DIR')" scope="default" type="STRING"/>
+        <property name="watchDir" expression="get-property('env', 'WATCH_DIR')" scope="default" type="STRING"/>
+        <!-- 4. Construct target path for XML output and source CSV absolute path -->
+        <property name="targetXmlFilePath" expression="fn:concat($ctx:doneDir, '/', $ctx:outputFileName)" scope="default" type="STRING"/>
+        <property name="sourceCsvFilePath" expression="fn:concat($ctx:watchDir, '/', $ctx:incomingFileName)" scope="default" type="STRING"/>
+        <!-- 5. Write converted XML to DONE_DIR -->
+    </propertyGroup>
     <file.write configKey="LocalRoot">
         <filePath>{$ctx:targetXmlFilePath}</filePath>
         <contentOrExpression>${payload}</contentOrExpression>
